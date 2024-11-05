@@ -1,0 +1,7 @@
+{
+  "name": "@deno/kv-utils",
+  "version": "0.0.0",
+  "exports": {
+    ".": "./mod.ts"
+  }
+}
