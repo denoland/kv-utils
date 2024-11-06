@@ -2,6 +2,31 @@
   "name": "@deno/kv-utils",
   "version": "0.0.0",
   "exports": {
-    ".": "./mod.ts"
+    ".": "./mod.ts",
+    "./json": "./json.ts",
+    "./estimate-size": "./estimate_size.ts"
+  },
+  "publish": {
+    "exclude": [".github", "_benches", "*_test.ts"]
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^1.0.6",
+    "@std/crypto": "jsr:@std/crypto@^1.0.3",
+    "@std/encoding": "jsr:@std/encoding@^1.0.5"
+  },
+  "tasks": {
+    "bench": "deno bench _benches/*.ts",
+    "test": "deno test --allow-net --unstable-kv --doc"
+  },
+  "lint": {
+    "rules": {
+      "include": [
+        "camelcase",
+        "no-sync-fn-in-async-fn",
+        "single-var-declarator",
+        "verbatim-module-syntax",
+        "no-console"
+      ]
+    }
   }
 }

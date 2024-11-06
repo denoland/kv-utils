@@ -23,7 +23,7 @@ jobs:
         uses: denoland/setup-deno@v2
 
       - name: Run tests
-        run: deno test -A
+        run: deno task test
 
   lint:
     runs-on: ubuntu-latest
