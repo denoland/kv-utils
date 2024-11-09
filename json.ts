@@ -381,7 +381,7 @@ export interface KvSetJSON {
 }
 
 /** Used internally to identify a typed array. */
-export type TypedArray =
+type TypedArray =
   | Int8Array
   | Uint8Array
   | Uint8ClampedArray
@@ -398,7 +398,7 @@ export type TypedArray =
  * Used internally to be able to map the name of the typed array to its instance
  * type.
  */
-export interface TypedArrayMap {
+interface TypedArrayMap {
   /** {@linkcode Int8Array} which is a typed array. */
   Int8Array: Int8Array;
   /** {@linkcode Uint8Array} which is a typed array. */
@@ -424,7 +424,7 @@ export interface TypedArrayMap {
 }
 
 /** Used internally. The string literal types of the names of the type. */
-export type TypedArrayTypes = keyof TypedArrayMap;
+type TypedArrayTypes = keyof TypedArrayMap;
 
 /**
  * A representation of a typed array Deno KV value. The value is a URL safe
