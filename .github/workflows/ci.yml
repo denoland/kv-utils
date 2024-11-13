@@ -4,6 +4,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -41,9 +42,12 @@ jobs:
       - name: Lint
         run: deno lint
 
-  publish-dry-run:
+  publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
@@ -51,5 +55,5 @@ jobs:
       - name: Set up Deno
         uses: denoland/setup-deno@v2
 
-      - name: Publish (dry run)
-        run: deno publish --dry-run
+      - name: Publish on tag
+        run: deno run -A jsr:@david/publish-on-tag@0.1.4
