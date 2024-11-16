@@ -45,11 +45,14 @@
  * import { exportEntries } from "@deno/kv-utils/import-export";
  *
  * const db = await Deno.openKv();
- * Deno.serve((_req) => exportEntries(
+ * const server = Deno.serve((_req) => exportEntries(
  *   db,
  *   { prefix: ["person"] },
  *   { type: "response" }
- *  ));
+ * ));
+ *
+ * await server.finished;
+ * db.close();
  * ```
  *
  * ## Importing Data
