@@ -3,20 +3,22 @@
   "version": "0.0.0",
   "exports": {
     ".": "./mod.ts",
-    "./json": "./json.ts",
-    "./estimate-size": "./estimate_size.ts"
+    "./estimate-size": "./estimate_size.ts",
+    "./import-export": "./import_export.ts",
+    "./json": "./json.ts"
   },
   "publish": {
-    "exclude": [".github", "_benches", "*_test.ts"]
+    "exclude": [".github", "_benches", "*.test.ts", "_test_util.ts"]
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@^1.0.6",
+    "@std/bytes": "jsr:@std/bytes@^1.0.3",
     "@std/crypto": "jsr:@std/crypto@^1.0.3",
     "@std/encoding": "jsr:@std/encoding@^1.0.5"
   },
   "tasks": {
     "bench": "deno bench _benches/*.ts",
-    "test": "deno test --allow-net --unstable-kv --doc"
+    "test": "deno test --allow-net --allow-write --allow-read --unstable-kv --doc"
   },
   "lint": {
     "rules": {

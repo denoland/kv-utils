@@ -88,8 +88,66 @@
  * assertEquals(estimateSize(value), 36);
  * ```
  *
+ * ## Importing and exporting entries
+ *
+ * Deno KV stores can be exported and imported. This is useful for backing up
+ * and restoring data, as well as for transferring data between different Deno
+ * processes.
+ *
+ * The import and export utilities are:
+ *
+ * - {@linkcode exportEntries} - Export entries from a Deno KV store as a stream
+ *   or a response.
+ * - {@linkcode importEntries} - Import entries into a Deno KV store.
+ *
+ * ### Examples
+ *
+ * Exporting entries from a Deno KV store and saving them to a file:
+ *
+ * ```ts
+ * import { exportEntries } from "@deno/kv-utils";
+ *
+ * const db = await Deno.openKv();
+ * const file = await Deno.open("export.ndjson", { write: true, create: true });
+ * for await (const chunk of exportEntries(db, { prefix: ["person"] })) {
+ *  await file.write(chunk);
+ * }
+ * file.close();
+ * db.close();
+ * ```
+ *
+ * Exporting entries from a Deno KV store and sending them as a response:
+ *
+ * ```ts ignore
+ * import { exportEntries } from "@deno/kv-utils";
+ *
+ * const db = await Deno.openKv();
+ * const server = Deno.serve((_req) => exportEntries(
+ *   db,
+ *   { prefix: ["person"] },
+ *   { type: "response" }
+ * ));
+ *
+ * await server.finished;
+ * db.close();
+ * ```
+ *
+ * Importing entries from a file and storing them in a Deno KV store:
+ *
+ * ```ts
+ * import { importEntries } from "@deno/kv-utils";
+ * import { assert } from "@std/assert";
+ *
+ * const db = await Deno.openKv();
+ * const file = await Deno.open("export.ndjson", { read: true });
+ * const result = await importEntries(db, file.readable);
+ * assert(result.errors === 0);
+ * db.close();
+ * ```
+ *
  * @module
  */
 
 export * from "./json.ts";
 export * from "./estimate_size.ts";
+export * from "./import_export.ts";
