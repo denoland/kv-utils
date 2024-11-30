@@ -26,7 +26,7 @@ Deno.test({
   fn() {
     assert(
       timingSafeEqual(
-        toValue({ type: "ArrayBuffer", value: "AQID" }),
+        toValue({ type: "ArrayBuffer", value: "AQID", byteLength: 3 }),
         new Uint8Array([1, 2, 3]).buffer,
       ),
     );
@@ -69,7 +69,7 @@ Deno.test({
   fn() {
     assert(
       timingSafeEqual(
-        toValue({ type: "DataView", value: "AQID" }),
+        toValue({ type: "DataView", value: "AQID", byteLength: 3 }),
         new DataView(new Uint8Array([1, 2, 3]).buffer),
       ),
     );
@@ -278,7 +278,7 @@ Deno.test({
 Deno.test({
   name: "toValue - Int8Array",
   fn() {
-    const actual = toValue({ type: "Int8Array", value: "AQID" });
+    const actual = toValue({ type: "Int8Array", value: "AQID", byteLength: 3 });
     assert(actual instanceof Int8Array);
     assert(timingSafeEqual(actual, new Uint8Array([1, 2, 3])));
   },
@@ -287,7 +287,11 @@ Deno.test({
 Deno.test({
   name: "toValue - Uint8Array",
   fn() {
-    const actual = toValue({ type: "Uint8Array", value: "AQID" });
+    const actual = toValue({
+      type: "Uint8Array",
+      value: "AQID",
+      byteLength: 3,
+    });
     assert(actual instanceof Uint8Array);
     assert(timingSafeEqual(actual, new Uint8Array([1, 2, 3])));
   },
@@ -296,7 +300,11 @@ Deno.test({
 Deno.test({
   name: "toValue - Uint8ClampedArray",
   fn() {
-    const actual = toValue({ type: "Uint8ClampedArray", value: "AQID" });
+    const actual = toValue({
+      type: "Uint8ClampedArray",
+      value: "AQID",
+      byteLength: 3,
+    });
     assert(actual instanceof Uint8ClampedArray);
     assert(timingSafeEqual(actual, new Uint8Array([1, 2, 3])));
   },
@@ -305,7 +313,11 @@ Deno.test({
 Deno.test({
   name: "toValue - Int16Array",
   fn() {
-    const actual = toValue({ type: "Int16Array", value: "AQIDBA" });
+    const actual = toValue({
+      type: "Int16Array",
+      value: "AQIDBA",
+      byteLength: 4,
+    });
     assert(actual instanceof Int16Array);
     assert(timingSafeEqual(actual, new Uint8Array([1, 2, 3, 4])));
   },
@@ -314,7 +326,11 @@ Deno.test({
 Deno.test({
   name: "toValue - Uint16Array",
   fn() {
-    const actual = toValue({ type: "Uint16Array", value: "AQIDBA" });
+    const actual = toValue({
+      type: "Uint16Array",
+      value: "AQIDBA",
+      byteLength: 4,
+    });
     assert(actual instanceof Uint16Array);
     assert(timingSafeEqual(actual, new Uint8Array([1, 2, 3, 4])));
   },
@@ -323,7 +339,11 @@ Deno.test({
 Deno.test({
   name: "toValue - Int32Array",
   fn() {
-    const actual = toValue({ type: "Int32Array", value: "AQIDBA" });
+    const actual = toValue({
+      type: "Int32Array",
+      value: "AQIDBA",
+      byteLength: 4,
+    });
     assert(actual instanceof Int32Array);
     assert(timingSafeEqual(actual, new Uint8Array([1, 2, 3, 4])));
   },
@@ -332,7 +352,11 @@ Deno.test({
 Deno.test({
   name: "toValue - Uint32Array",
   fn() {
-    const actual = toValue({ type: "Uint32Array", value: "AQIDBA" });
+    const actual = toValue({
+      type: "Uint32Array",
+      value: "AQIDBA",
+      byteLength: 4,
+    });
     assert(actual instanceof Uint32Array);
     assert(timingSafeEqual(actual, new Uint8Array([1, 2, 3, 4])));
   },
@@ -341,7 +365,11 @@ Deno.test({
 Deno.test({
   name: "toValue - Float32Array",
   fn() {
-    const actual = toValue({ type: "Float32Array", value: "mpmZP5qZWUAzM7NA" });
+    const actual = toValue({
+      type: "Float32Array",
+      value: "mpmZP5qZWUAzM7NA",
+      byteLength: 12,
+    });
     assert(actual instanceof Float32Array);
     assert(timingSafeEqual(actual, new Float32Array([1.2, 3.4, 5.6])));
   },
@@ -353,6 +381,7 @@ Deno.test({
     const actual = toValue({
       type: "Float64Array",
       value: "MzMzMzMz8z8zMzMzMzMLQGZmZmZmZhZA",
+      byteLength: 24,
     });
     assert(actual instanceof Float64Array);
     assert(timingSafeEqual(actual, new Float64Array([1.2, 3.4, 5.6])));
@@ -365,6 +394,7 @@ Deno.test({
     const actual = toValue({
       type: "BigInt64Array",
       value: "AQAAAAAAAAACAAAAAAAAAAMAAAAAAAAA",
+      byteLength: 24,
     });
     assert(actual instanceof BigInt64Array);
     assert(timingSafeEqual(actual, new BigInt64Array([1n, 2n, 3n])));
@@ -377,6 +407,7 @@ Deno.test({
     const actual = toValue({
       type: "BigUint64Array",
       value: "AQAAAAAAAAACAAAAAAAAAAMAAAAAAAAA",
+      byteLength: 24,
     });
     assert(actual instanceof BigUint64Array);
     assert(timingSafeEqual(actual, new BigUint64Array([1n, 2n, 3n])));
@@ -410,6 +441,7 @@ Deno.test({
     assertEquals(actual, {
       type: "ArrayBuffer",
       value: "AQID",
+      byteLength: 3,
     });
   },
 });
@@ -459,6 +491,7 @@ Deno.test({
     assertEquals(actual, {
       type: "DataView",
       value: "AQID",
+      byteLength: 3,
     });
   },
 });
@@ -661,6 +694,7 @@ Deno.test({
     assertEquals(actual, {
       type: "Int8Array",
       value: "AQID",
+      byteLength: 3,
     });
   },
 });
@@ -672,6 +706,7 @@ Deno.test({
     assertEquals(actual, {
       type: "Uint8Array",
       value: "AQID",
+      byteLength: 3,
     });
   },
 });
@@ -683,6 +718,7 @@ Deno.test({
     assertEquals(actual, {
       type: "Uint8ClampedArray",
       value: "AQID",
+      byteLength: 3,
     });
   },
 });
@@ -694,6 +730,7 @@ Deno.test({
     assertEquals(actual, {
       type: "Int16Array",
       value: "AQACAAMABAA",
+      byteLength: 8,
     });
   },
 });
@@ -705,6 +742,7 @@ Deno.test({
     assertEquals(actual, {
       type: "Uint16Array",
       value: "AQACAAMABAA",
+      byteLength: 8,
     });
   },
 });
@@ -716,6 +754,7 @@ Deno.test({
     assertEquals(actual, {
       type: "Int32Array",
       value: "AQAAAAIAAAADAAAABAAAAA",
+      byteLength: 16,
     });
   },
 });
@@ -727,6 +766,7 @@ Deno.test({
     assertEquals(actual, {
       type: "Uint32Array",
       value: "AQAAAAIAAAADAAAABAAAAA",
+      byteLength: 16,
     });
   },
 });
@@ -738,6 +778,7 @@ Deno.test({
     assertEquals(actual, {
       type: "Float32Array",
       value: "mpmZP5qZWUAzM7NA",
+      byteLength: 12,
     });
   },
 });
@@ -749,6 +790,7 @@ Deno.test({
     assertEquals(actual, {
       type: "Float64Array",
       value: "MzMzMzMz8z8zMzMzMzMLQGZmZmZmZhZA",
+      byteLength: 24,
     });
   },
 });
@@ -760,6 +802,7 @@ Deno.test({
     assertEquals(actual, {
       type: "BigInt64Array",
       value: "AQAAAAAAAAACAAAAAAAAAAMAAAAAAAAA",
+      byteLength: 24,
     });
   },
 });
@@ -771,6 +814,7 @@ Deno.test({
     assertEquals(actual, {
       type: "BigUint64Array",
       value: "AQAAAAAAAAACAAAAAAAAAAMAAAAAAAAA",
+      byteLength: 24,
     });
   },
 });
@@ -803,6 +847,7 @@ Deno.test({
     assertEquals(actual, {
       type: "Uint8Array",
       value: "AQID",
+      byteLength: 3,
     });
   },
 });
@@ -959,7 +1004,11 @@ Deno.test({
 Deno.test({
   name: "toKeyPart - Uint8Array",
   fn() {
-    const actual = toKeyPart({ type: "Uint8Array", value: "AQID" });
+    const actual = toKeyPart({
+      type: "Uint8Array",
+      value: "AQID",
+      byteLength: 3,
+    });
     assert(timingSafeEqual(actual, new Uint8Array([1, 2, 3])));
   },
 });
