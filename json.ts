@@ -26,7 +26,7 @@
  * import { toValue } from "@deno/kv-utils/json";
  *
  * // `json` represents a `Uint8Array` with the bytes of [1, 2, 3]
- * const json = { type: "Uint8Array", value: "AQID" } as const;
+ * const json = { type: "Uint8Array", value: "AQID", byteLength: 3 } as const;
  *
  * const db = await Deno.openKv();
  * await db.set(["a"], toValue(json));
@@ -145,6 +145,10 @@ export interface KvUint8ArrayJSON {
    * The URL safe base64 encoded value of the array.
    */
   value: string;
+  /**
+   * The byte length of the byte array.
+   */
+  byteLength: number;
 }
 
 /**
@@ -184,6 +188,10 @@ export interface KvArrayBufferJSON {
    * The URL safe base64 encoded value of the array buffer.
    */
   value: string;
+  /**
+   * The byte length of the array buffer.
+   */
+  byteLength: number;
 }
 
 /**
@@ -219,6 +227,10 @@ export interface KvDataViewJSON {
    * The URL safe base64 encoded value of the data view.
    */
   value: string;
+  /**
+   * The byte length of the data view.
+   */
+  byteLength: number;
 }
 
 /**
@@ -441,6 +453,10 @@ export interface KvTypedArrayJSON<
    * The URL safe base64 encoded value of the typed array.
    */
   value: string;
+  /**
+   * The byte length of the typed array.
+   */
+  byteLength: number;
 }
 
 /**
@@ -573,38 +589,39 @@ function errorToJSON(error: Error): KvErrorJSON {
  */
 function typedArrayToJSON(typedArray: ArrayBufferView): KvTypedArrayJSON {
   const value = encodeBase64Url(typedArray.buffer);
+  const byteLength = typedArray.byteLength;
   if (typedArray instanceof Int8Array) {
-    return { type: "Int8Array", value };
+    return { type: "Int8Array", value, byteLength };
   }
   if (typedArray instanceof Uint8Array) {
-    return { type: "Uint8Array", value };
+    return { type: "Uint8Array", value, byteLength };
   }
   if (typedArray instanceof Uint8ClampedArray) {
-    return { type: "Uint8ClampedArray", value };
+    return { type: "Uint8ClampedArray", value, byteLength };
   }
   if (typedArray instanceof Int16Array) {
-    return { type: "Int16Array", value };
+    return { type: "Int16Array", value, byteLength };
   }
   if (typedArray instanceof Uint16Array) {
-    return { type: "Uint16Array", value };
+    return { type: "Uint16Array", value, byteLength };
   }
   if (typedArray instanceof Int32Array) {
-    return { type: "Int32Array", value };
+    return { type: "Int32Array", value, byteLength };
   }
   if (typedArray instanceof Uint32Array) {
-    return { type: "Uint32Array", value };
+    return { type: "Uint32Array", value, byteLength };
   }
   if (typedArray instanceof Float32Array) {
-    return { type: "Float32Array", value };
+    return { type: "Float32Array", value, byteLength };
   }
   if (typedArray instanceof Float64Array) {
-    return { type: "Float64Array", value };
+    return { type: "Float64Array", value, byteLength };
   }
   if (typedArray instanceof BigInt64Array) {
-    return { type: "BigInt64Array", value };
+    return { type: "BigInt64Array", value, byteLength };
   }
   if (typedArray instanceof BigUint64Array) {
-    return { type: "BigUint64Array", value };
+    return { type: "BigUint64Array", value, byteLength };
   }
   throw TypeError("Unexpected typed array type, could not serialize.");
 }
@@ -674,7 +691,11 @@ export function keyPartToJSON(value: Deno.KvKeyPart): KvKeyPartJSON {
       return { type: "number", value };
     case "object":
       if (value instanceof Uint8Array) {
-        return { type: "Uint8Array", value: encodeBase64Url(value) };
+        return {
+          type: "Uint8Array",
+          value: encodeBase64Url(value),
+          byteLength: value.byteLength,
+        };
       }
       break;
     case "string":
@@ -941,7 +962,7 @@ export function valueToJSON(value: string): KvStringJSON;
  *
  * const value = new Uint8Array([1, 2, 3]);
  * const json = valueToJSON(value);
- * assertEquals(json, { type: "Uint8Array", value: "AQID" });
+ * assertEquals(json, { type: "Uint8Array", value: "AQID", byteLength: 3 });
  * ```
  */
 export function valueToJSON<TA extends TypedArray>(
@@ -960,7 +981,7 @@ export function valueToJSON<TA extends TypedArray>(
  *
  * const value = new Uint8Array([1, 2, 3]).buffer;
  * const json = valueToJSON(value);
- * assertEquals(json, { type: "ArrayBuffer", value: "AQID" });
+ * assertEquals(json, { type: "ArrayBuffer", value: "AQID", byteLength: 3 });
  * ```
  */
 export function valueToJSON(value: ArrayBufferLike): KvArrayBufferJSON;
@@ -977,7 +998,7 @@ export function valueToJSON(value: ArrayBufferLike): KvArrayBufferJSON;
  *
  * const value = new DataView(new Uint8Array([1, 2, 3]).buffer);
  * const json = valueToJSON(value);
- * assertEquals(json, { type: "DataView", value: "AQID" });
+ * assertEquals(json, { type: "DataView", value: "AQID", byteLength: 3 });
  * ```
  */
 export function valueToJSON(value: DataView): KvDataViewJSON;
@@ -1055,13 +1076,21 @@ export function valueToJSON(value: unknown): KvValueJSON {
         return { type: "Array", value: value.map(valueToJSON) };
       }
       if (value instanceof DataView) {
-        return { type: "DataView", value: encodeBase64Url(value.buffer) };
+        return {
+          type: "DataView",
+          value: encodeBase64Url(value.buffer),
+          byteLength: value.byteLength,
+        };
       }
       if (ArrayBuffer.isView(value)) {
         return typedArrayToJSON(value);
       }
       if (value instanceof ArrayBuffer) {
-        return { type: "ArrayBuffer", value: encodeBase64Url(value) };
+        return {
+          type: "ArrayBuffer",
+          value: encodeBase64Url(value),
+          byteLength: value.byteLength,
+        };
       }
       if (value instanceof Date) {
         return { type: "Date", value: value.toJSON() };
@@ -1313,7 +1342,7 @@ export function toKeyPart(json: KvStringJSON): string;
  * import { toKeyPart } from "@deno/kv-utils/json";
  * import { assertEquals } from "@std/assert";
  *
- * const json = { type: "Uint8Array", value: "AQID" } as const;
+ * const json = { type: "Uint8Array", value: "AQID", byteLength: 3 } as const;
  * const keyPart = toKeyPart(json);
  * assertEquals(keyPart, new Uint8Array([1, 2, 3]));
  * ```
@@ -1397,7 +1426,7 @@ export function toKey(json: KvKeyJSON): Deno.KvKey {
  * import { toValue } from "@deno/kv-utils/json";
  * import { assertEquals } from "@std/assert";
  *
- * const json = { type: "ArrayBuffer", value: "AQID" } as const;
+ * const json = { type: "ArrayBuffer", value: "AQID", byteLength: 3 } as const;
  * const value = toValue(json);
  * assertEquals(value, new Uint8Array([1, 2, 3]).buffer);
  * ```
@@ -1469,7 +1498,7 @@ export function toValue(json: KvBooleanJSON): boolean;
  * import { toValue } from "@deno/kv-utils/json";
  * import { assertEquals } from "@std/assert";
  *
- * const json = { type: "DataView", value: "AQID" } as const;
+ * const json = { type: "DataView", value: "AQID", byteLength: 3 } as const;
  * const value = toValue(json);
  * assertEquals(value, new DataView(new Uint8Array([1, 2, 3]).buffer));
  * ```
@@ -1679,7 +1708,7 @@ export function toValue(json: KvStringJSON): string;
  * import { toValue } from "@deno/kv-utils/json";
  * import { assertEquals } from "@std/assert";
  *
- * const json = { type: "Uint8Array", value: "AQID" } as const;
+ * const json = { type: "Uint8Array", value: "AQID", byteLength: 3 } as const;
  * const value = toValue(json);
  * assertEquals(value, new Uint8Array([1, 2, 3]));
  * ```
