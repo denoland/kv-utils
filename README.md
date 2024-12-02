@@ -67,7 +67,7 @@ stored in Deno KV, as well as the size of atomic operations.
 Deno KV stores values by using the V8 serialization format, which converts
 objects to a binary format and then that value is stored in the KV store.
 
-The `estimateSize} function can be used to estimate the size of a value in
+The `estimateSize` function can be used to estimate the size of a value in
 bytes. While it is not 100% accurate, it is 10x faster than using the V8
 serialize function, which is not available in some environments.
 
