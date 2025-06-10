@@ -30,7 +30,7 @@ function stripEol(u8: Uint8Array): Uint8Array {
  * of string lines.
  */
 export class LinesTransformStream extends TransformStream<Uint8Array, string> {
-  #buffer = new Uint8Array(0);
+  #buffer: Uint8Array<ArrayBufferLike> = new Uint8Array(0);
   #pos = 0;
 
   constructor() {

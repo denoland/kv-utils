@@ -16,7 +16,7 @@ Deno.test({
     const kv = await setup();
     await kv.set(["a"], 100n);
     await kv.set(["b"], new Uint8Array([1, 2, 3]));
-    let u8 = new Uint8Array();
+    let u8: Uint8Array<ArrayBufferLike> = new Uint8Array();
     for await (const chunk of exportEntries(kv, { prefix: [] })) {
       u8 = concat([u8, chunk]);
     }
@@ -63,7 +63,7 @@ Deno.test({
     const response = exportEntries(kv, { prefix: [] }, { type: "response" });
     assertEquals(response.headers.get("content-type"), "application/x-ndjson");
     assertEquals(response.headers.get("content-disposition"), null);
-    let u8 = new Uint8Array();
+    let u8 = new Uint8Array() as Uint8Array<ArrayBufferLike>;
     for await (const chunk of exportEntries(kv, { prefix: [] })) {
       u8 = concat([u8, chunk]);
     }
@@ -93,7 +93,7 @@ Deno.test({
       response.headers.get("content-disposition"),
       `attachment; filename="export.ndjson"`,
     );
-    let u8 = new Uint8Array();
+    let u8: Uint8Array<ArrayBufferLike> = new Uint8Array();
     for await (const chunk of exportEntries(kv, { prefix: [] })) {
       u8 = concat([u8, chunk]);
     }
