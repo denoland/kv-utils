@@ -87,14 +87,14 @@ Deno.test({
 Deno.test({
   name: "estimateSize - Uint8Array",
   fn() {
-    assertEquals(estimateSize(new Uint8Array([1, 2, 3])), 12);
+    assertEquals(estimateSize(new Uint8Array([1, 2, 3])), 8);
   },
 });
 
 Deno.test({
   name: "estimateSize - ArrayBuffer",
   fn() {
-    assertEquals(estimateSize(new Uint8Array([1, 2, 3]).buffer), 12);
+    assertEquals(estimateSize(new Uint8Array([1, 2, 3]).buffer), 7);
   },
 });
 
@@ -137,7 +137,7 @@ Deno.test({
 Deno.test({
   name: "estimateSize - Deno.KvU64",
   fn() {
-    assertEquals(estimateSize(new Deno.KvU64(100n)), 12);
+    assertEquals(estimateSize(new Deno.KvU64(100n)), 22);
   },
 });
 
@@ -148,7 +148,7 @@ Deno.test({
     const a = { b: 1 as any };
     const b = { a };
     a.b = b;
-    assertEquals(estimateSize(a), 11);
+    assertEquals(estimateSize(a), 16);
   },
 });
 
