@@ -437,10 +437,10 @@ export class ImportError extends Error {
 export async function importEntries(
   db: Deno.Kv,
   data:
-    | ReadableStream<Uint8Array>
+    | ReadableStream<Uint8Array<ArrayBufferLike>>
     | Blob
     | ArrayBufferView
-    | ArrayBuffer
+    | ArrayBufferLike
     | string,
   options: ImportEntriesOptions = {},
 ): Promise<ImportEntriesResult> {
@@ -459,7 +459,7 @@ export async function importEntries(
   } else if (data instanceof Blob) {
     stream = data.stream().pipeThrough(transformer);
   } else {
-    stream = new Blob([data]).stream().pipeThrough(transformer);
+    stream = new Blob([data as ArrayBuffer]).stream().pipeThrough(transformer);
   }
   const reader = stream.getReader();
   let count = 0;

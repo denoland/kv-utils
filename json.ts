@@ -588,7 +588,7 @@ function errorToJSON(error: Error): KvErrorJSON {
  * @private
  */
 function typedArrayToJSON(typedArray: ArrayBufferView): KvTypedArrayJSON {
-  const value = encodeBase64Url(typedArray.buffer);
+  const value = encodeBase64Url(typedArray.buffer as ArrayBuffer);
   const byteLength = typedArray.byteLength;
   if (typedArray instanceof Int8Array) {
     return { type: "Int8Array", value, byteLength };
@@ -1078,7 +1078,7 @@ export function valueToJSON(value: unknown): KvValueJSON {
       if (value instanceof DataView) {
         return {
           type: "DataView",
-          value: encodeBase64Url(value.buffer),
+          value: encodeBase64Url(value.buffer as ArrayBuffer),
           byteLength: value.byteLength,
         };
       }
